@@ -10,9 +10,24 @@ namespace Extintores.data
 
         }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<PedidoProduto>()
+                .HasKey(pp => new { pp.PedidoCodigo, pp.ProdutoCodigo });
+        }
+
+
         //DBSet
+        public DbSet<Categoria> Categoria { get; set; }
+        
         public DbSet<Produto> Produto { get; set; }
 
-        public DbSet<Categoria> Categoria { get; set; }
+        public DbSet<Cliente> Cliente { get; set; }
+
+        public DbSet<Pedido> Pedido { get; set; }
+
+        public DbSet<PedidoProduto> PedidoProduto { get; set; }
     }
 }
