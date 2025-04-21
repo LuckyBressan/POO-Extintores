@@ -459,14 +459,14 @@
         }
       }
     },
-    "/api/Pedido/{id}": {
+    "/api/Pedido/{codigo}": {
       "get": {
         "tags": [
           "Pedido"
         ],
         "parameters": [
           {
-            "name": "id",
+            "name": "codigo",
             "in": "path",
             "required": true,
             "schema": {
@@ -504,7 +504,7 @@
         ],
         "parameters": [
           {
-            "name": "id",
+            "name": "codigo",
             "in": "path",
             "required": true,
             "schema": {
@@ -537,7 +537,9 @@
             "description": "OK"
           }
         }
-      },
+      }
+    },
+    "/api/Pedido/{id}": {
       "delete": {
         "tags": [
           "Pedido"
@@ -644,19 +646,18 @@
         }
       }
     },
-    "/api/PedidoProduto/{id}": {
+    "/api/PedidoProduto/{codigo}": {
       "get": {
         "tags": [
           "PedidoProduto"
         ],
         "parameters": [
           {
-            "name": "id",
+            "name": "codigo",
             "in": "path",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int32"
+              "type": "string"
             }
           }
         ],
@@ -682,7 +683,9 @@
             }
           }
         }
-      },
+      }
+    },
+    "/api/PedidoProduto/{id}": {
       "put": {
         "tags": [
           "PedidoProduto"

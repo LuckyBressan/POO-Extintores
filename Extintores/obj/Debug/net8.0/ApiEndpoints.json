@@ -266,13 +266,13 @@
   {
     "ContainingType": "Extintores.Controllers.PedidoController",
     "Method": "GetPedido",
-    "RelativePath": "api/Pedido/{id}",
+    "RelativePath": "api/Pedido/{codigo}",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "id",
+        "Name": "codigo",
         "Type": "System.Int32",
         "IsRequired": true
       }
@@ -292,13 +292,13 @@
   {
     "ContainingType": "Extintores.Controllers.PedidoController",
     "Method": "PutPedido",
-    "RelativePath": "api/Pedido/{id}",
+    "RelativePath": "api/Pedido/{codigo}",
     "HttpMethod": "PUT",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "id",
+        "Name": "codigo",
         "Type": "System.Int32",
         "IsRequired": true
       },
@@ -375,14 +375,14 @@
   {
     "ContainingType": "Extintores.Controllers.PedidoProdutoController",
     "Method": "GetPedidoProduto",
-    "RelativePath": "api/PedidoProduto/{id}",
+    "RelativePath": "api/PedidoProduto/{codigo}",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "id",
-        "Type": "System.Int32",
+        "Name": "codigo",
+        "Type": "System.String",
         "IsRequired": true
       }
     ],

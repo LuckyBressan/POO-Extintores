@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Extintores")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+9c3a1ec4952aeff3b0247f29dd64dd80db631f00")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+febc964b3e8748c7a1d04ff37d62ede49fc73a90")]
 [assembly: System.Reflection.AssemblyProductAttribute("Extintores")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Extintores")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

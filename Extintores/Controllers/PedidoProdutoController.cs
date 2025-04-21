@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Extintores.Model;
 using Extintores.data;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Extintores.Controllers
 {
@@ -29,10 +30,12 @@ namespace Extintores.Controllers
         }
 
         // GET: api/PedidoProduto/5
-        [HttpGet("Objeto")]
-        public async Task<ActionResult<PedidoProduto>> GetPedidoProduto(PedidoProduto PedidoProduto)
+        [HttpGet("{codigo}")]
+        public async Task<ActionResult<PedidoProduto>> GetPedidoProduto(string codigo)
         {
-            var pedidoProduto = await _context.PedidoProduto.Include(pp => pp.Pedido).Include(pp => pp.Produto).FirstOrDefaultAsync(pp => pp.PedidoCodigo == PedidoProduto.PedidoCodigo && pp.ProdutoCodigo == PedidoProduto.ProdutoCodigo);
+            var codigos = TrataCodigoRecebido(codigo);
+
+            var pedidoProduto = await _context.PedidoProduto.Include(pp => pp.Pedido).Include(pp => pp.Produto).FirstOrDefaultAsync(pp => pp.PedidoCodigo == codigos[0] && pp.ProdutoCodigo == codigos[1]);
 
             if (pedidoProduto == null)
             {
@@ -44,13 +47,15 @@ namespace Extintores.Controllers
 
         // PUT: api/PedidoProduto/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutPedidoProduto(int id, PedidoProduto pedidoProduto)
+        [HttpPut("{codigo}")]
+        public async Task<IActionResult> PutPedidoProduto(string codigo, PedidoProduto pedidoProduto)
         {
-            if (id != pedidoProduto.PedidoCodigo)
+            if (codigo == null)
             {
                 return BadRequest();
             }
+
+            var codigos = TrataCodigoRecebido(codigo);
 
             _context.Entry(pedidoProduto).State = EntityState.Modified;
 
@@ -60,7 +65,7 @@ namespace Extintores.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!PedidoProdutoExists(id))
+                if (!PedidoProdutoExists(codigos))
                 {
                     return NotFound();
                 }
@@ -85,7 +90,8 @@ namespace Extintores.Controllers
             }
             catch (DbUpdateException)
             {
-                if (PedidoProdutoExists(pedidoProduto.PedidoCodigo))
+                List<int> codigos = new List<int> { pedidoProduto.PedidoCodigo, pedidoProduto.ProdutoCodigo };
+                if (PedidoProdutoExists(codigos))
                 {
                     return Conflict();
                 }
@@ -99,10 +105,11 @@ namespace Extintores.Controllers
         }
 
         // DELETE: api/PedidoProduto/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeletePedidoProduto(int id)
+        [HttpDelete("{codigo}")]
+        public async Task<IActionResult> DeletePedidoProduto(string codigo)
         {
-            var pedidoProduto = await _context.PedidoProduto.FindAsync(id);
+            var codigos = TrataCodigoRecebido(codigo);
+            var pedidoProduto = await _context.PedidoProduto.FindAsync(codigo);
             if (pedidoProduto == null)
             {
                 return NotFound();
@@ -114,9 +121,16 @@ namespace Extintores.Controllers
             return NoContent();
         }
 
-        private bool PedidoProdutoExists(int id)
+        private bool PedidoProdutoExists(List<int> codigos)
         {
-            return _context.PedidoProduto.Any(e => e.PedidoCodigo == id);
+            return _context.PedidoProduto.Any(e => e.PedidoCodigo == codigos[0] && e.ProdutoCodigo == codigos[1]);
+        }
+
+        private List<int> TrataCodigoRecebido(string codigo)
+        {
+            return codigo.Split('-') // separa em ["1", "1"]
+                        .Select(int.Parse) // converte cada item para int
+                        .ToList();
         }
     }
 }
