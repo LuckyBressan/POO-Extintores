@@ -25,14 +25,14 @@ namespace Extintores.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<PedidoProduto>>> GetPedidoProduto()
         {
-            return await _context.PedidoProduto.ToListAsync();
+            return await _context.PedidoProduto.Include(pp => pp.Pedido).Include(pp => pp.Produto).OrderBy(pp => pp.PedidoCodigo).ToListAsync();
         }
 
         // GET: api/PedidoProduto/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<PedidoProduto>> GetPedidoProduto(int id)
+        [HttpGet("Objeto")]
+        public async Task<ActionResult<PedidoProduto>> GetPedidoProduto(PedidoProduto PedidoProduto)
         {
-            var pedidoProduto = await _context.PedidoProduto.FindAsync(id);
+            var pedidoProduto = await _context.PedidoProduto.Include(pp => pp.Pedido).Include(pp => pp.Produto).FirstOrDefaultAsync(pp => pp.PedidoCodigo == PedidoProduto.PedidoCodigo && pp.ProdutoCodigo == PedidoProduto.ProdutoCodigo);
 
             if (pedidoProduto == null)
             {

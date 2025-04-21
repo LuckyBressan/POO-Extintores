@@ -274,14 +274,14 @@
         }
       }
     },
-    "/api/Cliente/{id}": {
+    "/api/Cliente/{codigo}": {
       "get": {
         "tags": [
           "Cliente"
         ],
         "parameters": [
           {
-            "name": "id",
+            "name": "codigo",
             "in": "path",
             "required": true,
             "schema": {
@@ -319,7 +319,7 @@
         ],
         "parameters": [
           {
-            "name": "id",
+            "name": "codigo",
             "in": "path",
             "required": true,
             "schema": {
@@ -359,7 +359,7 @@
         ],
         "parameters": [
           {
-            "name": "id",
+            "name": "codigo",
             "in": "path",
             "required": true,
             "schema": {
@@ -829,14 +829,14 @@
         }
       }
     },
-    "/api/Produto/{id}": {
+    "/api/Produto/{codigo}": {
       "get": {
         "tags": [
           "Produto"
         ],
         "parameters": [
           {
-            "name": "id",
+            "name": "codigo",
             "in": "path",
             "required": true,
             "schema": {
@@ -874,7 +874,7 @@
         ],
         "parameters": [
           {
-            "name": "id",
+            "name": "codigo",
             "in": "path",
             "required": true,
             "schema": {
@@ -914,7 +914,7 @@
         ],
         "parameters": [
           {
-            "name": "id",
+            "name": "codigo",
             "in": "path",
             "required": true,
             "schema": {

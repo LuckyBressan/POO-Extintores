@@ -23,5 +23,15 @@ namespace Extintores.Model
         public string Cpf { get; set; }
 
         public string Cnpj { get; set; }
+
+        public bool IsTipoFisica()
+        {
+            return Tipo == EnumTipoCliente.Fisica;
+        }
+
+        public bool IsTipoJuridica()
+        {
+            return Tipo == EnumTipoCliente.Juridica;
+        }
     }
 }

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Extintores.Model;
 using Extintores.data;
+using Extintores.Validations;
 
 namespace Extintores.Controllers
 {
@@ -29,10 +30,10 @@ namespace Extintores.Controllers
         }
 
         // GET: api/Cliente/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Cliente>> GetCliente(int id)
+        [HttpGet("{codigo}")]
+        public async Task<ActionResult<Cliente>> GetCliente(int codigo)
         {
-            var cliente = await _context.Cliente.FindAsync(id);
+            var cliente = await _context.Cliente.FindAsync(codigo);
 
             if (cliente == null)
             {
@@ -44,12 +45,25 @@ namespace Extintores.Controllers
 
         // PUT: api/Cliente/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutCliente(int id, Cliente cliente)
+        [HttpPut("{codigo}")]
+        public async Task<IActionResult> PutCliente(int codigo, Cliente cliente)
         {
-            if (id != cliente.Codigo)
+            if (codigo != cliente.Codigo)
             {
-                return BadRequest();
+                return BadRequest("Produto sendo atualizado não condiz com o informado");
+            }
+
+            if (
+                VerificaCpf(cliente)
+            )
+            {
+                return BadRequest("Não foi informado um CPF válido");
+            }
+            else if (
+                VerificaCnpj(cliente)
+            )
+            {
+                return BadRequest("Não foi informado um CNPJ válido");
             }
 
             _context.Entry(cliente).State = EntityState.Modified;
@@ -60,7 +74,7 @@ namespace Extintores.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!ClienteExists(id))
+                if (!ClienteExists(codigo))
                 {
                     return NotFound();
                 }
@@ -78,6 +92,23 @@ namespace Extintores.Controllers
         [HttpPost]
         public async Task<ActionResult<Cliente>> PostCliente(Cliente cliente)
         {
+            if(cliente == null)
+            {
+                return BadRequest("Não foi passado um produto!");
+            }
+            if(
+                VerificaCpf(cliente)
+            )
+            {
+                return BadRequest("Não foi informado um CPF válido");
+            } 
+            else if(
+                VerificaCnpj(cliente)
+            )
+            {
+                return BadRequest("Não foi informado um CNPJ válido");
+            }
+
             _context.Cliente.Add(cliente);
             await _context.SaveChangesAsync();
 
@@ -85,13 +116,13 @@ namespace Extintores.Controllers
         }
 
         // DELETE: api/Cliente/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteCliente(int id)
+        [HttpDelete("{codigo}")]
+        public async Task<IActionResult> DeleteCliente(int codigo)
         {
-            var cliente = await _context.Cliente.FindAsync(id);
+            var cliente = await _context.Cliente.FindAsync(codigo);
             if (cliente == null)
             {
-                return NotFound();
+                return NotFound("Não foi encontrado o cliente informado!");
             }
 
             _context.Cliente.Remove(cliente);
@@ -100,9 +131,19 @@ namespace Extintores.Controllers
             return NoContent();
         }
 
-        private bool ClienteExists(int id)
+        private bool ClienteExists(int codigo)
         {
-            return _context.Cliente.Any(e => e.Codigo == id);
+            return _context.Cliente.Any(e => e.Codigo == codigo);
+        }
+
+        private bool VerificaCpf(Cliente cliente)
+        {
+            return cliente.IsTipoFisica() && (cliente.Cpf == null || !ValidadorCPF.Validar(cliente.Cpf));
+        }
+
+        private bool VerificaCnpj(Cliente cliente)
+        {
+            return cliente.IsTipoJuridica() && (cliente.Cnpj == null || !ValidadorCNPJ.Validar(cliente.Cnpj));
         }
     }
 }

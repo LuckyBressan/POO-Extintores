@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Extintores.Model;
 using Extintores.data;
+using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 
 namespace Extintores.Controllers
 {
@@ -25,14 +26,14 @@ namespace Extintores.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Pedido>>> GetPedido()
         {
-            return await _context.Pedido.ToListAsync();
+            return await _context.Pedido.Include(p => p.Cliente).OrderBy(p => p.Codigo).ToListAsync();
         }
 
         // GET: api/Pedido/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Pedido>> GetPedido(int id)
+        [HttpGet("{codigo}")]
+        public async Task<ActionResult<Pedido>> GetPedido(int codigo)
         {
-            var pedido = await _context.Pedido.FindAsync(id);
+            var pedido = await _context.Pedido.Include(p => p.Cliente).FirstOrDefaultAsync(p => p.Codigo == codigo);
 
             if (pedido == null)
             {
@@ -44,12 +45,17 @@ namespace Extintores.Controllers
 
         // PUT: api/Pedido/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutPedido(int id, Pedido pedido)
+        [HttpPut("{codigo}")]
+        public async Task<IActionResult> PutPedido(int codigo, Pedido pedido)
         {
-            if (id != pedido.Codigo)
+            if (codigo != pedido.Codigo)
             {
-                return BadRequest();
+                return BadRequest("Produto sendo atualizado não condiz com o informado");
+            }
+
+            if(!ClienteExists(pedido.ClienteCodigo))
+            {
+                return BadRequest("Cliente informado para o pedido não existe");
             }
 
             _context.Entry(pedido).State = EntityState.Modified;
@@ -60,7 +66,7 @@ namespace Extintores.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!PedidoExists(id))
+                if (!PedidoExists(codigo))
                 {
                     return NotFound();
                 }
@@ -78,6 +84,16 @@ namespace Extintores.Controllers
         [HttpPost]
         public async Task<ActionResult<Pedido>> PostPedido(Pedido pedido)
         {
+            if(pedido == null)
+            {
+                return BadRequest("Não foi passado um pedido!");
+            }
+
+            if (!ClienteExists(pedido.ClienteCodigo))
+            {
+                return BadRequest("Cliente informado para o pedido não existe");
+            }
+
             _context.Pedido.Add(pedido);
             await _context.SaveChangesAsync();
 
@@ -103,6 +119,11 @@ namespace Extintores.Controllers
         private bool PedidoExists(int id)
         {
             return _context.Pedido.Any(e => e.Codigo == id);
+        }
+
+        private bool ClienteExists(int codigo)
+        {
+            return _context.Cliente.Any(c => c.Codigo == codigo);
         }
     }
 }
