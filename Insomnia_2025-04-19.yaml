@@ -112,6 +112,26 @@ collection:
             send: true
             store: true
           rebuildPath: true
+      - url: https://localhost:7139/api/Categoria/1
+        name: GetCategoria
+        meta:
+          id: req_4af6f58150374d7ba72fedb6e0ad02c9
+          created: 1745191869649
+          modified: 1745191886708
+          isPrivate: false
+          sortKey: -1745191869649
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.0.2
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
   - name: Produto
     meta:
       id: fld_9ebe29e469f54e6ea3420becb20b07e9
@@ -144,7 +164,7 @@ collection:
         meta:
           id: req_97d8145112d44045b07c65dc356c477a
           created: 1745094650384
-          modified: 1745094902912
+          modified: 1745191073019
           isPrivate: false
           sortKey: -1745093983322
         method: POST
@@ -152,10 +172,10 @@ collection:
           mimeType: application/json
           text: |-
             {
-            	"codigo": 1,
+            	"codigo": 2,
             	"nome"  : "Extintor A",
             	"descricao": "Extintores do tipo A",
-            	"categoriaCodigo": 1,
+            	"categoriaCodigo": 2,
             	"preco": 99.99,
             	"quantidade": 15
             }
@@ -177,7 +197,7 @@ collection:
         meta:
           id: req_eb65a3c0183649608c39c2f9da41ecea
           created: 1745094650386
-          modified: 1745094991715
+          modified: 1745191691644
           isPrivate: false
           sortKey: -1745094374563
         method: PUT
@@ -186,8 +206,8 @@ collection:
           text: |-
             {
             	"codigo": 1,
-            	"nome"  : "Extintor A",
-            	"descricao": "Extintores do tipo A",
+            	"nome"  : "Extintor B",
+            	"descricao": "Extintores do tipo B",
             	"preco"    : 120,
             	"quantidade": 20,
             	"categoriaCodigo": 1
@@ -214,6 +234,26 @@ collection:
           isPrivate: false
           sortKey: -1745094454758
         method: DELETE
+        headers:
+          - name: User-Agent
+            value: insomnia/11.0.2
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: https://localhost:7139/api/Produto/1
+        name: GetProduto
+        meta:
+          id: req_cabec82ea9ee448b927a63b33f8deb06
+          created: 1745191770991
+          modified: 1745191795807
+          isPrivate: false
+          sortKey: -1745191770991
+        method: GET
         headers:
           - name: User-Agent
             value: insomnia/11.0.2
@@ -257,7 +297,7 @@ collection:
         meta:
           id: req_1c2b6a3085ae466892b9e1906719ecd9
           created: 1745094659417
-          modified: 1745095172480
+          modified: 1745196859383
           isPrivate: false
           sortKey: -1745093983322
         method: POST
@@ -291,7 +331,7 @@ collection:
         meta:
           id: req_62ec64c13aff46289822beba08df871f
           created: 1745094659419
-          modified: 1745095196525
+          modified: 1745196635936
           isPrivate: false
           sortKey: -1745094374563
         method: PUT
@@ -304,7 +344,7 @@ collection:
               "dataNascimento": "2005-11-01",
               "email": "lucas.bressan@unidavi.edu.br",
               "tipo": 0,
-              "cpf": "032.203.340-32",
+              "cpf": "032-203-340-32",
               "cnpj": null
             }
         headers:
@@ -329,6 +369,26 @@ collection:
           isPrivate: false
           sortKey: -1745094454758
         method: DELETE
+        headers:
+          - name: User-Agent
+            value: insomnia/11.0.2
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: https://localhost:7139/api/Cliente/1
+        name: GetCliente
+        meta:
+          id: req_e141b5ebda09404fabff23d796b008fb
+          created: 1745196935841
+          modified: 1745196983168
+          isPrivate: false
+          sortKey: -1745196935841
+        method: GET
         headers:
           - name: User-Agent
             value: insomnia/11.0.2
@@ -548,6 +608,30 @@ collection:
           sortKey: -1745094454758
         method: DELETE
         headers:
+          - name: User-Agent
+            value: insomnia/11.0.2
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: https://localhost:7139/api/PedidoProduto/1-1
+        name: GetPedidoProduto
+        meta:
+          id: req_7d988efa31604bcc98dc7c5d682579ed
+          created: 1745259145814
+          modified: 1745259996879
+          isPrivate: false
+          sortKey: -1745259145814
+        method: GET
+        body:
+          mimeType: application/json
+        headers:
+          - name: Content-Type
+            value: application/json
           - name: User-Agent
             value: insomnia/11.0.2
         settings:
