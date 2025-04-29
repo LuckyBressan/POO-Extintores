@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System.ComponentModel.DataAnnotations;
 
 namespace Extintores.Model
 {
@@ -21,5 +22,14 @@ namespace Extintores.Model
 
         public Cliente? Cliente { get; set; }
 
+        public bool IsPedidoEntrega()
+        {
+            return Entrega == EnumEntregaPedido.Entrega;
+        }
+
+        public bool IsPedidoRetirada()
+        {
+            return Entrega == EnumEntregaPedido.Fisica;
+        }
     }
 }

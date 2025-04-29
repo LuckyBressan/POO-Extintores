@@ -1,12 +1,11 @@
 {
   "Version": 1,
-  "Hash": "S92vpQ/j8LiTzI6n7Q7bOiLLabl+StPwzUgSUwEq7nE=",
+  "Hash": "srgb+lrk031rL5Jz9vpL8P8yMgZz0hJa5XFLQI50wnY=",
   "Source": "Extintores",
   "BasePath": "_content/Extintores",
   "Mode": "Default",
   "ManifestType": "Build",
   "ReferencedProjectsConfiguration": [],
   "DiscoveryPatterns": [],
-  "Assets": [],
-  "Endpoints": []
+  "Assets": []
 }

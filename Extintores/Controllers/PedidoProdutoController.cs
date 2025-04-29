@@ -55,6 +55,29 @@ namespace Extintores.Controllers
                 return BadRequest();
             }
 
+            if (
+                !ProdutoExists(pedidoProduto.ProdutoCodigo) ||
+                !PedidoExists(pedidoProduto.PedidoCodigo)
+            )
+            {
+                return BadRequest("Produto ou Pedido informado não existe!");
+            }
+
+            var pedidoProdutoUpdate = await FindPedidoProduto(TrataCodigoRecebido(codigo));
+
+            if(pedidoProdutoUpdate == null)
+            {
+                return BadRequest("Pedido Produto informado não existe");
+            }
+
+            //Restauramos o estoque para antes da inclusão do pedido
+            await ReverteEstoqueProduto(pedidoProdutoUpdate.ProdutoCodigo, pedidoProdutoUpdate.Quantidade);
+
+            if (!(await RetiraEstoqueProduto(pedidoProduto.ProdutoCodigo, pedidoProduto.Quantidade)))
+            {
+                return BadRequest("Não foi possível atualizar o estoque!");
+            }
+
             var codigos = TrataCodigoRecebido(codigo);
 
             _context.Entry(pedidoProduto).State = EntityState.Modified;
@@ -83,6 +106,19 @@ namespace Extintores.Controllers
         [HttpPost]
         public async Task<ActionResult<PedidoProduto>> PostPedidoProduto(PedidoProduto pedidoProduto)
         {
+            if(
+                !ProdutoExists(pedidoProduto.ProdutoCodigo) ||
+                !PedidoExists(pedidoProduto.PedidoCodigo)
+            )
+            {
+                return BadRequest("Produto ou Pedido informado não existe!");
+            }
+
+            if(!(await RetiraEstoqueProduto(pedidoProduto.ProdutoCodigo, pedidoProduto.Quantidade)))
+            {
+                return BadRequest("Não foi possível atualizar o estoque do produto!");
+            }
+
             _context.PedidoProduto.Add(pedidoProduto);
             try
             {
@@ -101,15 +137,14 @@ namespace Extintores.Controllers
                 }
             }
 
-            return CreatedAtAction("GetPedidoProduto", new { id = pedidoProduto.PedidoCodigo }, pedidoProduto);
+            return CreatedAtAction("GetPedidoProduto", new { id = pedidoProduto.PedidoCodigo }, pedidoProduto.ProdutoCodigo);
         }
 
         // DELETE: api/PedidoProduto/5
         [HttpDelete("{codigo}")]
         public async Task<IActionResult> DeletePedidoProduto(string codigo)
         {
-            var codigos = TrataCodigoRecebido(codigo);
-            var pedidoProduto = await _context.PedidoProduto.FindAsync(codigo);
+            var pedidoProduto = await FindPedidoProduto(TrataCodigoRecebido(codigo));
             if (pedidoProduto == null)
             {
                 return NotFound();
@@ -121,9 +156,69 @@ namespace Extintores.Controllers
             return NoContent();
         }
 
+        private async Task<PedidoProduto> FindPedidoProduto(List<int> codigos)
+        {
+            return await _context.PedidoProduto.Where(pp => pp.ProdutoCodigo == codigos[0] && pp.PedidoCodigo == codigos[1]).FirstAsync();
+        }
+
         private bool PedidoProdutoExists(List<int> codigos)
         {
             return _context.PedidoProduto.Any(e => e.PedidoCodigo == codigos[0] && e.ProdutoCodigo == codigos[1]);
+        }
+
+        private bool ProdutoExists(int codigo)
+        {
+            return _context.Produto.Any(e => e.Codigo == codigo);
+        }
+
+        private bool PedidoExists(int codigo)
+        {
+            return _context.Pedido.Any(e => e.Codigo == codigo);
+        }
+
+        private bool ValidaQuantidadeInvalidaProduto(int codigo, int quantidadeSolicitada)
+        {
+            var produto = _context.Produto.Where(p => p.Codigo == codigo).First();
+
+            return quantidadeSolicitada > produto.Quantidade;
+        }
+
+        private async Task<bool> ReverteEstoqueProduto(int codigo, int quantidade)
+        {
+            var produto = await _context.Produto.Where(p => p.Codigo == codigo).FirstAsync();
+
+            produto.Quantidade += quantidade;
+
+            return await AtualizaEstoqueProduto(produto);
+        }
+
+        private async Task<bool> RetiraEstoqueProduto(int codigo, int quantidade)
+        {
+            var produto = await _context.Produto.Where(p => p.Codigo == codigo).FirstAsync();
+
+            if(ValidaQuantidadeInvalidaProduto(produto.Codigo, quantidade))
+            {
+                return false;
+            }
+
+            produto.Quantidade -= quantidade;
+
+            return await AtualizaEstoqueProduto(produto);
+        }
+
+        private async Task<bool> AtualizaEstoqueProduto(Produto produto)
+        {
+
+            try
+            {
+                _context.Produto.Update(produto);
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                return false;
+            }
+            return true;
         }
 
         private List<int> TrataCodigoRecebido(string codigo)

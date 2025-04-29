@@ -53,7 +53,16 @@ namespace Extintores.Controllers
                 return BadRequest("Produto sendo atualizado não condiz com o informado");
             }
 
-            if(!ClienteExists(pedido.ClienteCodigo))
+            if (ValidaLocalEntrega(pedido))
+            {
+                return BadRequest("Não foi informado um local de entrega.");
+            }
+            if (pedido.IsPedidoRetirada())
+            {
+                pedido.LocalEntrega = "Retirar na loja";
+            }
+
+            if (!ClienteExists(pedido.ClienteCodigo))
             {
                 return BadRequest("Cliente informado para o pedido não existe");
             }
@@ -87,6 +96,15 @@ namespace Extintores.Controllers
             if(pedido == null)
             {
                 return BadRequest("Não foi passado um pedido!");
+            }
+
+            if(ValidaLocalEntrega(pedido))
+            {
+                return BadRequest("Não foi informado um local de entrega.");
+            }
+            if(pedido.IsPedidoRetirada())
+            {
+                pedido.LocalEntrega = "Retirar na loja";
             }
 
             if (!ClienteExists(pedido.ClienteCodigo))
@@ -124,6 +142,11 @@ namespace Extintores.Controllers
         private bool ClienteExists(int codigo)
         {
             return _context.Cliente.Any(c => c.Codigo == codigo);
+        }
+
+        private bool ValidaLocalEntrega(Pedido pedido)
+        {
+            return pedido.IsPedidoEntrega() && String.IsNullOrEmpty(pedido.LocalEntrega);
         }
     }
 }

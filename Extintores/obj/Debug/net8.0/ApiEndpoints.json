@@ -401,14 +401,14 @@
   {
     "ContainingType": "Extintores.Controllers.PedidoProdutoController",
     "Method": "PutPedidoProduto",
-    "RelativePath": "api/PedidoProduto/{id}",
+    "RelativePath": "api/PedidoProduto/{codigo}",
     "HttpMethod": "PUT",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "id",
-        "Type": "System.Int32",
+        "Name": "codigo",
+        "Type": "System.String",
         "IsRequired": true
       },
       {
@@ -422,14 +422,14 @@
   {
     "ContainingType": "Extintores.Controllers.PedidoProdutoController",
     "Method": "DeletePedidoProduto",
-    "RelativePath": "api/PedidoProduto/{id}",
+    "RelativePath": "api/PedidoProduto/{codigo}",
     "HttpMethod": "DELETE",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "id",
-        "Type": "System.Int32",
+        "Name": "codigo",
+        "Type": "System.String",
         "IsRequired": true
       }
     ],
